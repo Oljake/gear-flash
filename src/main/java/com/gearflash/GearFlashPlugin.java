@@ -83,7 +83,6 @@ import net.runelite.client.ui.overlay.OverlayManager;
     name = "Gear Flash",
     description = "Shift-right-click trigger weapons and trigger groups",
     tags = {"gear", "switch", "inventory", "highlight", "melee", "range", "mage"},
-    enabledByDefault = false
 )
 public class GearFlashPlugin extends Plugin
 {
