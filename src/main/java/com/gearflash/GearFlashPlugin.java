@@ -4,7 +4,6 @@ import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
 import com.google.inject.Provides;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -91,9 +90,6 @@ public class GearFlashPlugin extends Plugin
     private static final String STORAGE_GROUP = "gearflash_groups_triggers";
 
     private static final int SAVE_FILE_VERSION = 1;
-    private static final Gson GSON =
-        new GsonBuilder().setPrettyPrinting().create();
-
     /*
      * Human-readable backup/export file.
      *
@@ -123,6 +119,9 @@ public class GearFlashPlugin extends Plugin
 
     @Inject
     private Client client;
+
+    @Inject
+    private Gson gson;
 
     @Inject
     private ClientThread clientThread;
@@ -915,7 +914,7 @@ public class GearFlashPlugin extends Plugin
             StandardCharsets.UTF_8
         );
 
-        final JsonObject root = GSON.fromJson(json, JsonObject.class);
+        final JsonObject root = gson.fromJson(json, JsonObject.class);
         if (root == null)
         {
             return;
@@ -1020,7 +1019,7 @@ public class GearFlashPlugin extends Plugin
 
         Files.write(
             temporaryFile,
-            GSON.toJson(root).getBytes(StandardCharsets.UTF_8),
+            gson.newBuilder().setPrettyPrinting().create().toJson(root).getBytes(StandardCharsets.UTF_8),
             StandardOpenOption.CREATE,
             StandardOpenOption.TRUNCATE_EXISTING,
             StandardOpenOption.WRITE
