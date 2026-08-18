@@ -409,12 +409,14 @@ public class GearFlashPlugin extends Plugin
         Color color,
         boolean trigger)
     {
-        final GearStyle current =
-            trigger ? getTriggerGroup(itemId) : getGearGroup(itemId);
+        final boolean assigned =
+            trigger
+                ? getSet(triggerGroups, style).contains(itemId)
+                : getSet(gearGroups, style).contains(itemId);
 
         String label = text;
 
-        if (current == style)
+        if (assigned)
         {
             label += " ✓";
         }
@@ -437,13 +439,26 @@ public class GearFlashPlugin extends Plugin
 
     /**
      * Gear assignment:
-     * one item can belong to one gear style.
+     * one item can belong to multiple gear styles.
      */
     private void setGearGroup(int itemId, GearStyle style)
     {
         rememberItemName(itemId);
-        removeFromMap(gearGroups, itemId);
-        getSet(gearGroups, style).add(itemId);
+
+        /*
+         * Style-group membership is independent per combat style.
+         *
+         * Example:
+         * Amulet of fury can be in both Melee and Range.
+         * Clicking Melee toggles only Melee; it does not remove Range/Mage.
+         */
+        final Set<Integer> styleItems = getSet(gearGroups, style);
+
+        if (!styleItems.remove(itemId))
+        {
+            styleItems.add(itemId);
+        }
+
         saveAll();
         writeJsonBackup();
     }
@@ -457,22 +472,29 @@ public class GearFlashPlugin extends Plugin
 
     /**
      * Trigger assignment:
-     * one item can belong to one trigger style.
+     * one item can belong to multiple trigger styles.
      *
      * Multiple DIFFERENT items can all be triggers for the same style.
      */
     private void setTrigger(int itemId, GearStyle style)
     {
         rememberItemName(itemId);
-        removeFromMap(triggerGroups, itemId);
-        getSet(triggerGroups, style).add(itemId);
+
+        /*
+         * Trigger membership is independent too.
+         * An item may be configured as more than one trigger style.
+         */
+        final Set<Integer> styleTriggers = getSet(triggerGroups, style);
+
+        if (!styleTriggers.remove(itemId))
+        {
+            styleTriggers.add(itemId);
+        }
+
         saveAll();
         writeJsonBackup();
 
-        clientThread.invokeLater(() ->
-        {
-            updateActiveStyle();
-        });
+        clientThread.invokeLater(this::updateActiveStyle);
     }
 
     private void removeTrigger(int itemId)
@@ -542,7 +564,32 @@ public class GearFlashPlugin extends Plugin
             return;
         }
 
-        activeStyle = getTriggerGroup(weapon.getId());
+        final int weaponId = weapon.getId();
+
+        /*
+         * A trigger can belong to multiple styles. The overlay currently has
+         * one active style/color at a time, so if the SAME equipped item is
+         * intentionally assigned to more than one trigger style we use this
+         * deterministic priority:
+         *
+         * Melee -> Range -> Mage
+         */
+        if (getSet(triggerGroups, GearStyle.MELEE).contains(weaponId))
+        {
+            activeStyle = GearStyle.MELEE;
+        }
+        else if (getSet(triggerGroups, GearStyle.RANGE).contains(weaponId))
+        {
+            activeStyle = GearStyle.RANGE;
+        }
+        else if (getSet(triggerGroups, GearStyle.MAGE).contains(weaponId))
+        {
+            activeStyle = GearStyle.MAGE;
+        }
+        else
+        {
+            activeStyle = GearStyle.NONE;
+        }
     }
 
     /**
