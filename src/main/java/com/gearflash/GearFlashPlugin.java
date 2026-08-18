@@ -82,7 +82,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @PluginDescriptor(
     name = "Gear Flash",
     description = "Shift-right-click trigger weapons and trigger groups",
-    tags = {"gear", "switch", "inventory", "highlight", "melee", "range", "mage"},
+    tags = {"gear", "switch", "inventory", "highlight", "melee", "range", "mage"}
 )
 public class GearFlashPlugin extends Plugin
 {
