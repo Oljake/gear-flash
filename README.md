@@ -1,36 +1,23 @@
 # Gear Flash
 
-Gear Flash is a RuneLite plugin that highlights your configured gear when switching combat styles.
+Gear Flash makes gear switching easier by showing you exactly what to equip next.
 
-## Features
+Set your weapons or other items as **triggers**, assign your gear to **style groups**, and Gear Flash takes care of the rest. When you equip a trigger, the matching gear flashes in your inventory.
 
-- Create separate Melee, Range, and Mage gear groups.
-- Set items as triggers for each combat style.
-- Equipping a trigger highlights the gear assigned to that style.
-- Configure items directly from the inventory with Shift + Right Click.
-- View and manage your configured items in the Gear Flash settings.
-- Your setup is automatically saved between sessions.
+## See It in Action
 
-## How to use
+![Gear Flash Demo](gifs/gear-flash-demo-equip.gif)
 
-Shift + Right Click an inventory item and choose:
+## Easy to Set Up
 
-**GF Trigger**
-- Melee
-- Range
-- Mage
+Everything is configured directly from your inventory.
 
-or:
+Simply **Shift + Right Click** an item to set it as a trigger or add it to a style group. Items can be part of multiple groups, and anything you've added can be removed the same way.
 
-**GF Style Group**
-- Melee
-- Range
-- Mage
+![Setting Up Gear Flash](gifs/gear-flash-demo-set.gif)
 
-### Example
+## Make It Your Own
 
-Set your Osmumten's fang as a Melee trigger.
+The plugin settings let you customize how Gear Flash looks and feels, including the highlight colors and other visual options.
 
-Then add your melee equipment to the Melee Style Group.
-
-When the Fang is equipped, Gear Flash highlights your configured melee gear.
+Set it up your way and let Gear Flash make your next switch easy to spot.
